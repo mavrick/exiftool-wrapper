@@ -15,8 +15,8 @@
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "chai": "^4.2.0",
-    "chai-exclude": "^2.0.1",
-    "mocha": "^6.1.4"
+    "chai-exclude": "^2.0.2",
+    "mocha": "^6.2.0"
   },
   "scripts": {
     "babel": "babel -d lib/ src/",

@@ -12,13 +12,13 @@ import { spawn, spawnSync } from 'child_process'
  * @param {metadataCallback} [options.callback] - Callback that receives the metadata
  * @returns {Promise.<object[]>} A promise that contains the metadata for the media in an Array of Objects
  */
-export function metadata({ source, tags, useBufferLimit = true, maxBufferSize = 10000, callback }) {
+export function metadata({ source, tags = [], useBufferLimit = true, maxBufferSize = 10000, callback = null }) {
   return new Promise((resolve, reject) => {
     process.nextTick(() => {
       if (!source) {
         let error = new TypeError('"source" must be a string, [string] or Buffer')
         tryCallback(callback, error)
-        reject(error)
+        return reject(error)
       }
       let exifparams = prepareTags(tags)
       // "-j" for Exiftool json output
@@ -62,8 +62,8 @@ export function metadata({ source, tags, useBufferLimit = true, maxBufferSize = 
             parseddata = parseddata[0]
           }
           tryCallback(callback, null, parseddata)
-          resolve(parseddata)
-        } catch (_) {
+          return resolve(parseddata)
+        } catch (e) {
           let error
           if (exiferr.length > 0) {
             error = new Error(`Exiftool failed with exit code ${code}:\n ${exiferr}`)
@@ -74,9 +74,11 @@ export function metadata({ source, tags, useBufferLimit = true, maxBufferSize = 
           error.stdout = exifdata
           error.code = code
           tryCallback(callback, error)
-          reject(error)
+          return reject(error)
         }
       })
+      // https://nodejs.org/api/child_process.html#child_process_event_error
+      exif.on('error', reject)
     })
   })
 }
@@ -140,12 +142,9 @@ function tryCallback(cbfunction, error, result) {
 }
 
 // Helper function for tag preparation.
-function prepareTags(tags) {
+const prepareTags = (tags) => {
   if (tags) {
-    tags = tags.map((tagname) => {
-      return '-' + tagname
-    })
-    return tags
+    return tags.map(tagname => `-${tagname}`)
   }
   return []
 }
