@@ -41,7 +41,8 @@ export function metadata({ source, tags = [], useBufferLimit = true, maxBufferSi
       }
 
       if (config !== null) {
-        exifparams.unshift(`-config ${config}`)
+        exifparams.unshift(`${config}`)
+        exifparams.unshift(`-config`)
       }
 
       let exif = spawn('exiftool', exifparams)
