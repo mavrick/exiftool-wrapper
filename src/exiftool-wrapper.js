@@ -9,10 +9,11 @@ import { spawn, spawnSync } from 'child_process'
  * @param {string[]} [options.tags] - List of metadata tags to whitelist or blacklist (add '-' before each tag). See [ExifTool Tag Names]{@link http://www.sno.phy.queensu.ca/%7Ephil/exiftool/TagNames/index.html} for available tags.
  * @param {boolean} [options.useBufferLimit=true] - Allows the limiting the size of the buffer that is piped into ExifTool
  * @param {number} [options.maxBufferSize=10000] - Size of the buffer that is piped into ExifTool
+ * @param {string} [options.config] - load custom exiftool config file
  * @param {metadataCallback} [options.callback] - Callback that receives the metadata
  * @returns {Promise.<object[]>} A promise that contains the metadata for the media in an Array of Objects
  */
-export function metadata({ source, tags = [], useBufferLimit = true, maxBufferSize = 10000, callback = null }) {
+export function metadata({ source, tags = [], useBufferLimit = true, maxBufferSize = 10000, config = null, callback = null }) {
   return new Promise((resolve, reject) => {
     process.nextTick(() => {
       if (!source) {
@@ -37,6 +38,10 @@ export function metadata({ source, tags = [], useBufferLimit = true, maxBufferSi
         let error = new TypeError('"source" must be a string, [string] or Buffer')
         tryCallback(callback, error)
         reject(error)
+      }
+
+      if (config !== null) {
+        exifparams.unshift(`-config ${config}`)
       }
 
       let exif = spawn('exiftool', exifparams)
