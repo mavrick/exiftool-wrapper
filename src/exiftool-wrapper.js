@@ -99,7 +99,7 @@ export function metadata({ source, tags = [], useBufferLimit = true, maxBufferSi
  * @param {number} [options.maxBufferSize=10000] - Size of the buffer that is piped into ExifTool
  * @returns {object[]} An array of objects that contains the metadata for each media
  */
-export function metadataSync({ source, tags, useBufferLimit = true, maxBufferSize = 10000 }) {
+export function metadataSync({ source, tags, useBufferLimit = true, maxBufferSize = 10000, config = null }) {
   if (!source) {
     throw new Error('Undefined "source"')
   }
@@ -121,6 +121,10 @@ export function metadataSync({ source, tags, useBufferLimit = true, maxBufferSiz
     etdata = spawnSync('exiftool', exifparams)
   } else {
     throw new TypeError('"source" must be a string, [string] or Buffer')
+  }
+
+  if (config !== null) {
+    exifparams.unshift(`-config ${config}`)
   }
 
   try {
