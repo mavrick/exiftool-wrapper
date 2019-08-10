@@ -8,6 +8,7 @@
   },
   "directories": {
     "example": "examples",
+    "lib": "lib",
     "test": "test"
   },
   "devDependencies": {
@@ -42,5 +43,6 @@
   "bugs": {
     "url": "https://github.com/RoyalBingBong/exiftool-wrapper/issues"
   },
-  "homepage": "https://github.com/RoyalBingBong/exiftool-wrapper#readme"
+  "homepage": "https://github.com/RoyalBingBong/exiftool-wrapper#readme",
+  "dependencies": {}
 }
