@@ -124,7 +124,8 @@ export function metadataSync({ source, tags, useBufferLimit = true, maxBufferSiz
   }
 
   if (config !== null) {
-    exifparams.unshift(`-config ${config}`)
+    exifparams.unshift(`${config}`)
+    exifparams.unshift(`-config`)
   }
 
   try {
